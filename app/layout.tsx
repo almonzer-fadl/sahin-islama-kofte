@@ -14,6 +14,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sahinislamakofte.vercel.app"),
   title: "Şahin Islama Köfte – Sapanca'nın Efsanesi | Hasanpaşa, Sapanca",
   description:
     "Sapanca Hasanpaşa'da efsane ıslama köfte, kuzu pirzola, piyaz ve ev yapımı tatlılar. 1.411 Google yorumu, 4,5 puan. Her gün 11:00–22:00. Yemek salonu, arabaya servis ve temassız teslimat.",
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
       "1.411 Google yorumu ve 4,5 puanla Sapanca'nın efsanevi ıslama köfte adresi. Hasanpaşa, Sapanca.",
     type: "website",
     locale: "tr_TR",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
   },
 };
 

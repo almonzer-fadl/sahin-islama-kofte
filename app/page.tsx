@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 
 const business = {
@@ -205,7 +205,41 @@ function BagIcon({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
+function HamburgerIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const links = [
     { href: "#menu", label: "Menü" },
     { href: "#hikayemiz", label: "Hikayemiz" },
@@ -235,17 +269,53 @@ function Nav() {
             </a>
           ))}
         </nav>
-        <a
-          href={business.whatsapp}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white shadow-lg shadow-[#25D366]/25 transition-all hover:bg-[#1fb958]"
-        >
-          <WhatsAppIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">Sipariş Ver</span>
-          <span className="sm:hidden">Sipariş</span>
-        </a>
+        <div className="flex items-center gap-2.5">
+          <a
+            href={business.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-white shadow-lg shadow-[#25D366]/25 transition-all duration-300 hover:scale-[1.02] hover:bg-[#1fb958]"
+          >
+            <WhatsAppIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Sipariş Ver</span>
+            <span className="sm:hidden">Sipariş</span>
+          </a>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-brown-950 transition-colors hover:text-brick-600 md:hidden"
+          >
+            {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
+          </button>
+        </div>
       </div>
+      {menuOpen && (
+        <div className="border-t border-brown-950/10 bg-cream/95 px-6 pb-6 pt-4 backdrop-blur-md md:hidden">
+          <nav className="flex flex-col gap-1">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-brown-950/70 transition-colors hover:bg-brick-600/10 hover:text-brick-600"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+          <a
+            href={business.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-[#25D366]/25 transition-all duration-300 hover:bg-[#1fb958]"
+          >
+            <WhatsAppIcon className="h-4 w-4" />
+            WhatsApp&apos;tan Sipariş Ver
+          </a>
+        </div>
+      )}
     </header>
   );
 }
@@ -263,7 +333,7 @@ function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="hero-zoom object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-brown-950/80 via-brown-950/55 to-brown-950/90" />
       </div>
@@ -332,14 +402,14 @@ function Hero() {
             href={business.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2.5 rounded-full bg-[#25D366] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#25D366]/30 transition-all hover:bg-[#1fb958]"
+            className="flex items-center gap-2.5 rounded-full bg-[#25D366] px-8 py-3.5 text-sm font-bold text-white shadow-xl shadow-[#25D366]/30 transition-all duration-300 hover:scale-[1.02] hover:bg-[#1fb958]"
           >
             <WhatsAppIcon className="h-5 w-5" />
             WhatsApp&apos;tan Sipariş Ver
           </a>
           <a
             href="#menu"
-            className="rounded-full border-2 border-cream/40 bg-brown-950/30 px-8 py-3.5 text-sm font-bold text-cream backdrop-blur transition-all hover:border-cream/70 hover:bg-brown-950/50"
+            className="rounded-full border-2 border-cream/40 bg-brown-950/30 px-8 py-3.5 text-sm font-bold text-cream backdrop-blur transition-all duration-300 hover:scale-[1.02] hover:border-cream/70 hover:bg-brown-950/50"
           >
             Menüyü Gör
           </a>
@@ -377,8 +447,12 @@ function StatsBand() {
   return (
     <section className="border-b-4 border-gold-warm bg-brick-600">
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-y-8 px-6 py-10 sm:grid-cols-4">
-        {stats.map((s) => (
-          <div key={s.label} className="text-center">
+        {stats.map((s, i) => (
+          <div
+            key={s.label}
+            className="fade-in text-center"
+            style={{ animationDelay: `${i * 0.1}s` }}
+          >
             <p className="font-display text-3xl font-bold text-cream sm:text-4xl">
               {s.value}
             </p>
@@ -600,7 +674,7 @@ function Reviews() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {reviews.map((r, i) => (
             <Reveal key={r.author} delay={(i % 3) * 90}>
-              <article className="flex h-full flex-col rounded-2xl border border-cream-dark bg-cream/60 p-7 shadow-sm">
+              <article className="flex h-full flex-col rounded-2xl border border-cream-dark bg-cream/60 p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex text-gold-warm">
                     {[...Array(5)].map((_, s) => (
@@ -710,7 +784,7 @@ function Contact() {
                 href={business.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-8 py-4 text-sm font-bold text-white shadow-xl shadow-[#25D366]/30 transition-all hover:bg-[#1fb958]"
+                className="flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-8 py-4 text-sm font-bold text-white shadow-xl shadow-[#25D366]/30 transition-all duration-300 hover:scale-[1.02] hover:bg-[#1fb958]"
               >
                 <WhatsAppIcon className="h-5 w-5" />
                 WhatsApp&apos;tan Yazın
@@ -719,7 +793,7 @@ function Contact() {
                 href={business.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-1 items-center justify-center gap-2.5 rounded-full border-2 border-brick-600 px-8 py-4 text-sm font-bold text-brick-700 transition-all hover:bg-brick-600 hover:text-cream"
+                className="flex flex-1 items-center justify-center gap-2.5 rounded-full border-2 border-brick-600 px-8 py-4 text-sm font-bold text-brick-700 transition-all duration-300 hover:scale-[1.02] hover:bg-brick-600 hover:text-cream"
               >
                 <MapIcon className="h-5 w-5" />
                 Yol Tarifi Al
